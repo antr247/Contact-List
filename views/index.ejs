@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html ng-app="AppCtrl">
+  <head>
+    <title>Contact List</title>
+    <!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <!-- SPELLS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script><!-- load angular -->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.js"></script>
+	<script src="/javascripts/controller.js"></script>
+  </head>
+  
+  <body ng-controller="mainController">
+   
+    <div class="container">
+		<h1> Contact List</h1>
+		<ui-view></ui-view>		<!-- remember to include ui-view for new state's template work. -->
+	</div>
+	<script type="text/ng-template" id="/home.html">
+		<div class="myBody">
+		<form name="createContactBox">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email</th>	
+					<th>Phone #:</th>
+					<th>Action</th>
+					<th>&nbsp;</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				
+				<tr> <!-- Apply Angular form validation with ng-minlength/maxlength and novalidate using form wrap around table -->
+					<td> 
+						<input type="text" ng-minlength="2" ng-maxlength="15" name="name" class="form-control" ng-model="formData.name" required ></input>
+						<span class="error" ng-show="createContactBox.name.$valid">This is required</span>
+					</td>
+					<td><input type="email"class="form-control" ng-model="formData.email"></td>
+					<td><input type="text" class="form-control" ng-model="formData.phone"></td>
+					<td><button ng-disabled="!createContactBox.$valid" class="btn btn-primary" novalidate ng-click="createContact()">Add Contact</td>
+					<td><button ng-disabled="!createContactBox.$valid" class="btn btn-info" novalidate  ng-click="updateContact()">Update</td>
+				</tr>
+				
+				<tr ng-repeat="contact in contacts">
+					<td>{{contact.name}}</td>
+					<td>{{contact.email}}</td>
+					<td>{{contact.phone}}</td>
+					<td><button class="btn btn-danger" ng-click="removeContact(contact._id)">Remove</button></td>
+					<td><button class="btn btn-warning" ng-click="editContact(contact._id)">Edit</button></td>
+				</tr>
+			</tbody>
+		</table></form>
+		</div>
+	</script>
+
+	<!--
+		Navbar will be display in all /home, /login, /register and doesn't need to be manually
+		included in any of the pages template above!
+	-->
+	<nav class="navbar navbar-default pull-right" ng-controller="NavCtrl">
+		<ul class="nav navbar-nav">
+		  <li ng-show="isLoggedIn()"><a>{{ currentUser() }}</a></li>
+		  <li ng-show="isLoggedIn()"><a href="/#/login" ng-click="logOut()">Log Out</a></li>
+		  <li ng-hide="isLoggedIn()"><a href="/#/login">Log In</a></li>
+		  <li ng-hide="isLoggedIn()"><a href="/#/register">Click here to register!</a></li>
+		</ul>
+	</nav>
+	
+	<script type="text/ng-template" id="/register.html">
+		  <div ng-show="error" class="alert alert-danger row">
+			<span>{{ error.message }}</span>
+		  </div>
+
+		  <form ng-submit="register()"
+			style="margin-top:30px;">
+			<h3>Register</h3>
+
+			<div class="form-group">
+			  <input type="text"
+			  class="form-control"
+			  placeholder="Username"
+			  ng-model="user.username"></input>
+			</div>
+			<div class="form-group">
+			  <input type="password"
+			  class="form-control"
+			  placeholder="Password"
+			  ng-model="user.password"></input>
+			</div>
+			<button type="submit" class="btn btn-primary">Register</button>
+		  </form>
+	</script>
+	
+	<script type="text/ng-template" id="/login.html">
+		  <div ng-show="error" class="alert alert-danger row">
+			<span>{{ error.message }}</span>
+		  </div>
+
+		  <form ng-submit="logIn()"
+			style="margin-top:30px;">
+			<h3>Log In</h3>
+
+			<div class="form-group">
+			  <input type="text"
+			  class="form-control"
+			  placeholder="Username"
+			  ng-model="user.username"></input>
+			</div>
+			<div class="form-group">
+			  <input type="password"
+			  class="form-control"
+			  placeholder="Password"
+			  ng-model="user.password"></input>
+			</div>
+			<button type="submit" class="btn btn-primary">Log In</button>
+			  <!--
+			  <br><br>
+			  <nav class="navbar navbar-default pull-left" ng-controller="NavCtrl">
+				  <ul class="nav navbar-nav">
+					  <li ng-hide="isLogged()"></li>Don't have an account?<a href="/#/register">Click here to register!</a></li>
+					  <li ng-hide="isLoggedIn()"><a href="/#/register">Register</a></li>
+				  </ul>
+			  </nav>
+				-->
+		  </form>
+  </script>
+  </body>
+</html>
